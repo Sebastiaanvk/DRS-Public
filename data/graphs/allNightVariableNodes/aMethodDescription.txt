@@ -1,0 +1,192 @@
+
+The graph format is:
+"
+seed
+nrLayers
+eltsLayer_0 eltsLayer_1 ...
+nrEdges
+
+// nrLayers rows follow here
+weight_0_0 weight_0_1 ...
+weight_1_0 weight_1_1
+.
+.
+.
+
+// nrEdges rows follow here
+edgeLayer edgeElt_1 edgeElt_2 // We save the layer of the head of the edge and we save the index of the head and the tail within their respective layers
+.
+.
+
+"
+
+
+
+These graphs were generated with the following code snippets with initial input seed=0:
+Using the following compiler flags:
+# Compiler
+CXX = g++
+# Compiler flags
+CXXFLAGS = -std=c++14 -pthread -m64 -g 
+
+
+The github hash is: b587ca256eb7c2f330d1f62805330e5e3bfb3784
+
+
+generateAndHeuristicAlgorithmsVariableNodes(129,"allNightVariableNodes");
+
+
+void generateAndHeuristicAlgorithmsVariableNodes(unsigned int seed,std::string folderName){
+
+    std::mt19937 gen(seed);
+
+    int nrLayers = 5;
+    int nrEdges = 2500;
+
+
+    float oddsSet1 = 0.25;
+
+
+    std::uniform_int_distribution<int> goalNodes = std::uniform_int_distribution<int>(200,2000);
+
+    float minLayerRatio = 0.80;
+    int graphsPerPars = 5;
+
+    int maxWeight1 = 1000;
+    float coinflip1 = 0.5f;
+    int maxWeight2 = 100;
+    float coinflip2 = 0.5f;
+
+    std::function<float(std::mt19937&)> weightFunction1 = [maxWeight1,coinflip1](std::mt19937& gen) -> float {
+        std::bernoulli_distribution distb(coinflip1);
+        std::uniform_int_distribution<> dist(0,maxWeight1);
+        if(distb(gen)){
+            return dist(gen);
+        }
+        return 0;
+    };
+
+    std::function<float(std::mt19937&)> weightFunction2 = [maxWeight2,coinflip2](std::mt19937& gen) -> float {
+        std::bernoulli_distribution distb(coinflip2);
+        std::uniform_int_distribution<> dist(0,maxWeight2);
+        if(distb(gen)){
+            return dist(gen);
+        }
+        return 0;
+    };
+
+    
+
+    std::vector<std::function<Algorithms::Solution(const MultipartiteSetGraph& graph)>>  heuristicAlgorithms = {
+        Algorithms::greedySinglePathsUni, Algorithms::greedySinglePathsBi,
+        Algorithms::greedyPeelingUni, Algorithms::greedyPeelingBi, Algorithms::baseLinePickEverythingUni, Algorithms::baseLinePickEverythingBi,
+    Algorithms::dynSinglePathUni, Algorithms::dynSinglePathBi};
+
+    std::vector<std::string> heuristicAlgorithmNames = { "greedySinglePathsUni", "greedySinglePathsBi",
+        "greedyPeelingUni","greedyPeelingBi","baselineEverythingUni","baselineEverythingBi",
+    "dynSinglePathsUni","dynSinglePathsBi"};
+
+    std::string graphsFolder = "data/graphs/"+folderName;
+    std::string outputFolder = "data/results/"+folderName;
+
+
+
+    for(int j=0; j<heuristicAlgorithms.size(); j++){
+        std::ofstream output(outputFolder + "/" + heuristicAlgorithmNames[j] + ".txt");
+        output.clear();
+        output << "index,nrLayers,nrNodes,nrEdges,objectiveValue,timeElapsed,solvedToCompletion"<<std::endl;
+    }
+    
+    int index = 0;
+
+    while(true){
+
+        int nrNodes = goalNodes(gen);
+
+        for(int i=0; i<graphsPerPars; i++){
+            MultipartiteSetGraph graph = generateGraphDoubleFixedEdges(nrNodes, nrLayers, minLayerRatio, nrEdges, oddsSet1,weightFunction1,weightFunction2, seed+index);
+
+            storeGraph(graph,index+seed,graphsFolder + "/graph"+ std::to_string(index) + ".txt");
+            
+
+            for(int j=0; j<heuristicAlgorithms.size(); j++){
+                auto start = std::chrono::high_resolution_clock::now();  
+                Algorithms::Solution sol = heuristicAlgorithms[j](graph);
+                auto end = std::chrono::high_resolution_clock::now();  
+                std::chrono::duration<double> elapsed = end - start;
+                std::ofstream output(outputFolder + "/" + heuristicAlgorithmNames[j] + ".txt",std::ios::app);
+                output << index << ',' << nrLayers << ',' << nrNodes << ',' << nrEdges << ',' <<sol.objectiveValue << ',' << elapsed.count() << ',' << (sol.solvedToCompletion?"1":"0") << std::endl;
+            }
+
+
+            index += 1;
+        }
+    }
+}
+
+
+MultipartiteSetGraph generateGraphDoubleFixedEdges(int nrNodes, int nrLayers, float minLayerRatio, int nrEdges, float oddsSet1, std::function<float(std::mt19937&)> weightFunction1, std::function<float(std::mt19937&)> weightFunction2, unsigned int seed){
+   std::mt19937 gen(seed);
+
+   int minLayerSize = std::min(1.0f,minLayerRatio)*nrNodes/nrLayers;
+   std::vector<int> partition = generatePartitionMinSize(nrNodes,nrLayers, minLayerSize ,gen);
+
+   std::vector<Edge> edgeVector = generateEdges(partition, nrEdges,gen);
+   MultipartiteSetGraph graph;
+   graph.layers = nrLayers;
+   for(int i=0; i<partition.size(); i++){
+      graph.elementsPerLayer[i] = partition[i];
+      for(int x=0; x<partition[i]; x++){
+         if (x <= partition[i]*oddsSet1){
+            graph.values[{i,x}] = weightFunction1(gen);
+         } else {
+            graph.values[{i,x}] = weightFunction2(gen);
+         }
+      }
+   }
+   // graph.values = genWeights(partition, weightFunction, gen);
+   graph.edges.insert(edgeVector.begin(),edgeVector.end());
+
+   return graph;
+}
+
+
+std::vector<Edge> generateEdges(const std::vector<int>& partition, int nrEdges, std::mt19937& gen){
+   std::vector<Edge> edges = totalEdgeVector(partition);
+   std::shuffle(edges.begin(),edges.end(),gen);
+   edges.resize(std::min(nrEdges,int(edges.size())));
+   return edges;
+}
+
+
+std::vector<int> generatePartition(int n, int k, std::mt19937& gen){
+   std::uniform_int_distribution<int> dist(1,n+k-1);
+
+   std::unordered_set<int> bars;
+
+   while (bars.size()<k-1){
+      int nextBar = dist(gen);
+      bars.insert(nextBar);
+   }
+
+   std::vector<int> barVec(bars.begin(),bars.end());
+   barVec.push_back(0);
+   barVec.push_back(n+k);
+   
+   std::sort(barVec.begin(),barVec.end());
+
+   std::vector<int> partition;
+   for(int i=0; i<k; i++){
+      partition.push_back(barVec[i+1]-barVec[i]-1);
+   }   
+   return partition;
+}
+
+
+std::vector<int> generatePartitionMinSize(int n, int k, int minSize, std::mt19937& gen){
+   std::vector<int> parts = generatePartition(n-k*minSize,k,gen);
+   for(int i=0; i<parts.size(); i++){
+      parts[i] += minSize;
+   }
+   return parts;
+}

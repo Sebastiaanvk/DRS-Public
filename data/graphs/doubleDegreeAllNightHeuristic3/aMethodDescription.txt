@@ -1,0 +1,237 @@
+
+The graph format is:
+"
+seed
+nrLayers
+eltsLayer_0 eltsLayer_1 ...
+nrEdges
+
+// nrLayers rows follow here
+weight_0_0 weight_0_1 ...
+weight_1_0 weight_1_1
+.
+.
+.
+
+// nrEdges rows follow here
+edgeLayer edgeElt_1 edgeElt_2 // We save the layer of the head of the edge and we save the index of the head and the tail within their respective layers
+.
+.
+
+"
+
+
+
+These graphs were generated with the following code snippets with initial input seed=0:
+Using the following compiler flags:
+# Compiler
+CXX = g++
+# Compiler flags
+CXXFLAGS = -std=c++14 -pthread -m64 -g 
+
+
+The github hash is: de551d613fcee5f100fdc7234227bd73714b2390    
+
+
+
+
+
+    generateAndHeuristicAlgorithmsContinue(50000,"doubleDegreeAllNightHeuristic3",1415);
+
+
+
+void generateAndHeuristicAlgorithmsContinue(unsigned int seed,std::string folderName, int index){
+
+    std::mt19937 gen(seed);
+
+    std::uniform_int_distribution<int> nrLayersRand(3, 10);
+    std::uniform_int_distribution<int> nrNodesRand(100, 1800);
+
+
+    std::uniform_real_distribution<float> oddsSet1Rand(0.30,0.50);
+    std::uniform_real_distribution<float> edgeDegree1Rand(1,10);
+    std::uniform_real_distribution<float> edgeDegree2Rand(1,6);
+    std::uniform_real_distribution<float> edgeDegreeCrossRand(0.6,3.5);
+
+    float minLayerRatio = 0.80;
+    int graphsPerPars = 5;
+
+    int maxWeight1 = 1000;
+    float coinflip1 = 0.5f;
+    int maxWeight2 = 100;
+    float coinflip2 = 0.5f;
+
+    std::function<float(std::mt19937&)> weightFunction1 = [maxWeight1,coinflip1](std::mt19937& gen) -> float {
+        std::bernoulli_distribution distb(coinflip1);
+        std::uniform_int_distribution<> dist(0,maxWeight1);
+        if(distb(gen)){
+            return dist(gen);
+        }
+        return 0;
+    };
+
+    std::function<float(std::mt19937&)> weightFunction2 = [maxWeight2,coinflip2](std::mt19937& gen) -> float {
+        std::bernoulli_distribution distb(coinflip2);
+        std::uniform_int_distribution<> dist(0,maxWeight2);
+        if(distb(gen)){
+            return dist(gen);
+        }
+        return 0;
+    };
+
+    
+
+    std::vector<std::function<Algorithms::Solution(const MultipartiteSetGraph& graph)>>  heuristicAlgorithms = {
+        Algorithms::greedySinglePathsUni, Algorithms::greedySinglePathsBi,
+        Algorithms::greedyPeelingUni, Algorithms::greedyPeelingBi, Algorithms::baseLinePickEverythingUni, Algorithms::baseLinePickEverythingBi,
+    Algorithms::dynSinglePathUni, Algorithms::dynSinglePathBi};
+
+    std::vector<std::string> heuristicAlgorithmNames = { "greedySinglePathsUni", "greedySinglePathsBi",
+        "greedyPeelingUni","greedyPeelingBi","baselineEverythingUni","baselineEverythingBi",
+    "dynSinglePathsUni","dynSinglePathsBi"};
+
+    std::string graphsFolder = "data/graphs/"+folderName;
+    std::string outputFolder = "data/results/"+folderName;
+
+    
+    std::ofstream outputParsData(outputFolder + "/" + "parsData" + ".txt");
+    outputParsData.clear();
+    outputParsData << "index,nrLayers,nrNodes,oddsSet1,edgeDegree1,edgeDegree2,edgeDegreeCross\n";
+
+    for(int j=0; j<heuristicAlgorithms.size(); j++){
+        std::ofstream output(outputFolder + "/" + heuristicAlgorithmNames[j] + ".txt");
+        output.clear();
+        output << "index,nrLayers,nrNodes,nrEdges,objectiveValue,timeElapsed,solvedToCompletion\n";
+    }
+
+    while(true){
+        GraphParametersDegreeGA pars;
+        pars.nrLayers = nrLayersRand(gen);
+        pars.nrNodes = nrNodesRand(gen);
+        pars.oddsSet1 = oddsSet1Rand(gen);
+        pars.edgeDegree1 = edgeDegree1Rand(gen);
+        pars.edgeDegree2 = edgeDegree2Rand(gen);
+        pars.edgeDegreeCross = edgeDegreeCrossRand(gen);
+        for(int i=0; i<graphsPerPars; i++){
+            MultipartiteSetGraph graph = generateDoubleGraphDegree(pars.nrNodes,pars.nrLayers, minLayerRatio, pars.oddsSet1,pars.edgeDegree1,pars.edgeDegree2,pars.edgeDegreeCross,weightFunction1,weightFunction2,index+seed);
+
+            storeGraph(graph,index+seed,graphsFolder + "/graph"+ std::to_string(index) + ".txt");
+            
+            std::ofstream outputParsData(outputFolder + "/" + "parsData" + ".txt",std::ios::app);
+            outputParsData << index << ',' << pars.nrLayers << ',' << pars.nrNodes << ',' << pars.oddsSet1 << ',' << pars.edgeDegree1 << ',' << pars.edgeDegree2<< ',' << pars.edgeDegreeCross<< std::endl;
+            std::cout << index << ',' << pars.nrLayers << ',' << pars.nrNodes << ',' << pars.oddsSet1 << ',' << pars.edgeDegree1 << ',' << pars.edgeDegree2<< ',' << pars.edgeDegreeCross<< std::endl;
+
+            for(int j=0; j<heuristicAlgorithms.size(); j++){
+                auto start = std::chrono::high_resolution_clock::now();  
+                Algorithms::Solution sol = heuristicAlgorithms[j](graph);
+                auto end = std::chrono::high_resolution_clock::now();  
+                std::chrono::duration<double> elapsed = end - start;
+                std::ofstream output(outputFolder + "/" + heuristicAlgorithmNames[j] + ".txt",std::ios::app);
+                output << index << ',' << graph.layers << ',' << pars.nrNodes << ',' << graph.edges.size() << ',' <<sol.objectiveValue << ',' << elapsed.count() << ',' << (sol.solvedToCompletion?"1":"0") << std::endl;
+            }
+
+
+            index += 1;
+        }
+    }
+}
+
+
+
+// The "degree" is the expected average degree between two layers
+MultipartiteSetGraph generateDoubleGraphDegree(int nrNodes, int nrLayers, float minLayerRatio, float oddsSet1,  float degree1, float degree2, float degreeCross, std::function<float(std::mt19937&)> weightFunction1, std::function<float(std::mt19937&)> weightFunction2, unsigned int seed){
+   std::mt19937 gen(seed);
+   int minLayerSize = std::max(1.0f,minLayerRatio)*nrNodes/nrLayers;
+   std::vector<int> partition = generatePartitionMinSize(nrNodes,nrLayers, minLayerSize ,gen);
+
+   MultipartiteSetGraph graph;
+   graph.layers = nrLayers;
+   std::set<VertexIndex> vertexSet1;
+   
+   std::bernoulli_distribution coinSet1(oddsSet1);
+
+
+   graph.elementsPerLayer[0] = partition[0];
+   for(int x=0; x<partition[0]; x++){
+      // bool inSet1 = coinSet1(gen);
+      // if(inSet1){
+      if(((float)x/partition[0])<=oddsSet1){
+         vertexSet1.insert({0,x});
+         graph.values[{0,x}] = weightFunction1(gen);
+      } else {
+         graph.values[{0,x}] = weightFunction2(gen);
+      }
+   }
+
+   for(int i=1; i<partition.size(); i++){
+      graph.elementsPerLayer[i] = partition[i];
+      int elts1 = partition[i]*oddsSet1;
+      int elts2 = partition[i]-elts1;
+      int elts1prev = partition[i-1]*oddsSet1;
+      int elts2prev = partition[i-1]-elts1prev;
+      // edgeRatio = (x+y)*degree/(2*x*y)
+      auto getEdgeRatio = [](float x, float y, float degree){ return std::min(1.0f,((x+y)*degree)/(2*x*y));};
+      std::bernoulli_distribution coinEdgeBoth1(getEdgeRatio(elts1prev,elts1,degree1));
+      std::bernoulli_distribution coinEdgeBoth2(getEdgeRatio(elts2prev,elts2,degree2));
+      std::bernoulli_distribution coinEdgeCross1(getEdgeRatio(elts1prev,elts2,degreeCross));
+      std::bernoulli_distribution coinEdgeCross2(getEdgeRatio(elts2prev,elts1,degreeCross));
+
+      for(int x=0; x<partition[i]; x++){
+         if(((float)x/partition[i])<=oddsSet1){
+            vertexSet1.insert({i,x});
+            graph.values[{i,x}] = weightFunction1(gen);
+         } else {
+            graph.values[{i,x}] = weightFunction2(gen);
+         }
+         for(int y=0; y<partition[i-1]; y++){
+            bool hasEdge;
+            if(vertexSet1.count({i,x}) && vertexSet1.count({i-1,y})){
+               hasEdge = coinEdgeBoth1(gen);
+            } else if( (!vertexSet1.count({i,x})) && !(vertexSet1.count({i-1,y})) ){
+               hasEdge = coinEdgeBoth2(gen);
+            } else if(vertexSet1.count({i-1,y})){
+               hasEdge = coinEdgeCross1(gen);
+            } else {
+               hasEdge = coinEdgeCross2(gen);
+            }
+            if( hasEdge ){
+               graph.edges.insert({{i-1,y},{i,x}});
+            }
+         }
+      }
+   }
+
+   return graph;
+}
+
+std::vector<int> generatePartition(int n, int k, std::mt19937& gen){
+   std::uniform_int_distribution<int> dist(1,n+k-1);
+
+   std::unordered_set<int> bars;
+
+   while (bars.size()<k-1){
+      int nextBar = dist(gen);
+      bars.insert(nextBar);
+   }
+
+   std::vector<int> barVec(bars.begin(),bars.end());
+   barVec.push_back(0);
+   barVec.push_back(n+k);
+   
+   std::sort(barVec.begin(),barVec.end());
+
+   std::vector<int> partition;
+   for(int i=0; i<k; i++){
+      partition.push_back(barVec[i+1]-barVec[i]-1);
+   }   
+   return partition;
+}
+
+
+std::vector<int> generatePartitionMinSize(int n, int k, int minSize, std::mt19937& gen){
+   std::vector<int> parts = generatePartition(n-k*minSize,k,gen);
+   for(int i=0; i<parts.size(); i++){
+      parts[i] += minSize;
+   }
+   return parts;
+}
