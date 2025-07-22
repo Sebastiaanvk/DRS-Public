@@ -1,0 +1,50 @@
+
+The graph format is:
+"
+seed
+nrLayers
+eltsLayer_0 eltsLayer_1 ...
+nrEdges
+
+// nrLayers rows follow here
+weight_0_0 weight_0_1 ...
+weight_1_0 weight_1_1
+.
+.
+.
+
+// nrEdges rows follow here
+edgeLayer edgeElt_1 edgeElt_2 // We save the layer of the head of the edge and we save the index of the head and the tail within their respective layers
+.
+.
+
+"
+
+
+
+These graphs were generated with the following code snippets with initial input seed=0:
+Using the following compiler flags:
+# Compiler
+CXX = g++
+# Compiler flags
+CXXFLAGS = -std=c++14 -pthread -m64 -g 
+
+
+The github hash is: 467df513a90a2137cf8840d54bd066fd8801374d 
+
+
+Code:
+
+void saveGraphsUniformCoinflip1DefaultValues(unsigned int seed){
+   std::vector<int> nrLayers = {3,4,5,6,7,8};
+   std::vector<int> nrNodes = {80,100,120,140,160};
+   std::vector<float> edgesRatios = {0.30,0.40,0.50,0.60,0.70};
+   std::vector<float> weightCoinFlipOdds = {0.20,0.40,0.60,0.80};
+
+   int minEltsPerLayer = 8;
+   int maxWeight = 1024;
+
+   std::string folderPath = "data/graphs/mini_set";
+
+   saveGraphsUniformCoinflip1(seed, nrLayers, nrNodes, edgesRatios, weightCoinFlipOdds, minEltsPerLayer, maxWeight, folderPath);
+}

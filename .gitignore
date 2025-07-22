@@ -1,6 +1,9 @@
+# .txt files
+*.txt
+
 # Prerequisites
 *.d
-build/*
+
 # Compiled Object files
 *.slo
 *.lo
@@ -10,12 +13,6 @@ build/*
 # Precompiled Headers
 *.gch
 *.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
 
 # Compiled Dynamic libraries
 *.so
@@ -36,6 +33,11 @@ build/*
 *.exe
 *.out
 *.app
+**/build/bin/*
 
-# debug information files
-*.dwo
+# Zip
+*.zip
+
+# Output
+**/output/logs/*
+**/output/images/*

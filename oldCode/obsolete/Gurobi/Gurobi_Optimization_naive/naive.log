@@ -1,0 +1,313 @@
+
+Gurobi 11.0.2 (linux64, C++) logging started Thu Jun 13 14:26:30 2024
+
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2526083
+Set parameter LogFile to value "naive.log"
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Warning: model has pending changes.
+Derived model does not contain these changes.
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 20.04.6 LTS")
+
+CPU model: AMD Ryzen 7 5800H with Radeon Graphics, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Optimize a model with 0 rows, 0 columns and 0 nonzeros
+Model fingerprint: 0xf9715da1
+Coefficient statistics:
+  Matrix range     [0e+00, 0e+00]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [0e+00, 0e+00]
+Presolve time: 0.00s
+Presolve: All rows and columns removed
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    0.0000000e+00   0.000000e+00   0.000000e+00      0s
+
+Solved in 0 iterations and 0.01 seconds (0.00 work units)
+Optimal objective  0.000000000e+00
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 20.04.6 LTS")
+
+CPU model: AMD Ryzen 7 5800H with Radeon Graphics, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Optimize a model with 42 rows, 31 columns and 94 nonzeros
+Model fingerprint: 0xdd8523c6
+Model has 15 quadratic objective terms
+Model has 1 quadratic constraint
+Variable types: 1 continuous, 30 integer (30 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  QMatrix range    [1e+00, 1e+00]
+  Objective range  [0e+00, 0e+00]
+  QObjective range [2e+00, 2e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [0e+00, 0e+00]
+  QRHS range       [1e+00, 1e+00]
+Presolve removed 14 rows and 6 columns
+Presolve time: 0.01s
+Presolved: 77 rows, 97 columns, 203 nonzeros
+Presolved model has 48 SOS constraint(s)
+Variable types: 49 continuous, 48 integer (48 binary)
+Found heuristic solution: objective -0.0000000
+Found heuristic solution: objective 1.3750000
+Found heuristic solution: objective 3.8333333
+
+Root relaxation: objective 2.787719e+01, 22 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   27.87719    0   18    3.83333   27.87719   627%     -    0s
+     0     0   12.00000    0   10    3.83333   12.00000   213%     -    0s
+H    0     0                       4.2500000   12.00000   182%     -    0s
+     0     0    7.16667    0   12    4.25000    7.16667  68.6%     -    0s
+H    0     0                       4.6000000    7.16667  55.8%     -    0s
+     0     0    4.60000    0   21    4.60000    4.60000  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 1
+  Implied bound: 7
+  Flow cover: 8
+
+Explored 1 nodes (56 simplex iterations) in 0.19 seconds (0.00 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 5: 4.6 4.25 3.83333 ... -0
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 4.600000000000e+00, best bound 4.600000000000e+00, gap 0.0000%
+
+Gurobi 11.0.2 (linux64, C++) logging started Thu Jun 13 14:26:51 2024
+
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2526083
+Set parameter LogFile to value "naive.log"
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 20.04.6 LTS")
+
+CPU model: AMD Ryzen 7 5800H with Radeon Graphics, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Optimize a model with 42 rows, 31 columns and 94 nonzeros
+Model fingerprint: 0xa0bfd23b
+Model has 15 quadratic objective terms
+Model has 1 quadratic constraint
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  QMatrix range    [1e+00, 1e+00]
+  Objective range  [0e+00, 0e+00]
+  QObjective range [2e+00, 2e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [0e+00, 0e+00]
+  QRHS range       [1e+00, 1e+00]
+Presolve removed 14 rows and 6 columns
+
+Continuous model is non-convex -- solving as a MIP
+
+Presolve removed 14 rows and 6 columns
+Presolve time: 0.00s
+Presolved: 121 rows, 52 columns, 314 nonzeros
+Presolved model has 25 bilinear constraint(s)
+Warning: Model contains variables with very large bounds participating
+         in product terms.
+         Presolve was not able to compute smaller bounds for these variables.
+         Consider bounding these variables or reformulating the model.
+
+Variable types: 52 continuous, 0 integer (0 binary)
+Found heuristic solution: objective 4.7500000
+
+Root relaxation: unbounded, 26 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  postponed    0         4.75000          -      -     -    0s
+     0     0  postponed    0         4.75000          -      -     -    0s
+     0     2  postponed    0         4.75000          -      -     -    0s
+H   67    28                       4.7500000          -      -   7.7    0s
+H   68    28                       4.7500000          -      -   7.6    0s
+*  148    68              23       4.7500010          -      -   4.6    0s
+*  180    82              24       4.7500012          -      -   4.1    0s
+*  347   156              27       4.7500016          -      -   3.5    0s
+*  419   190              28       4.7500018          -      -   3.1    0s
+H  874   618                       4.7500041          -      -   1.9    0s
+*  906   618              42    7500010.0000          -      -   1.9    0s
+Warning: uncrushing solution degraded objective value from 7500010.0000 to -1333333.333
+
+Explored 1229 nodes (2074 simplex iterations) in 0.19 seconds (0.04 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 8: 7.50001e+06 4.75 4.75 ... 4.75
+
+Optimal solution found (tolerance 1.00e-04)
+Warning: max constraint violation (1.0000e+00) exceeds tolerance
+         (model may be infeasible or unbounded - try turning presolve off)
+Best objective -1.333333333333e+06, best bound 7.500010000000e+06, gap 662.5008%
+
+Gurobi 11.0.2 (linux64, C++) logging started Thu Jun 13 14:28:21 2024
+
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2526083
+Set parameter LogFile to value "naive.log"
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 20.04.6 LTS")
+
+CPU model: AMD Ryzen 7 5800H with Radeon Graphics, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Optimize a model with 43 rows, 31 columns and 114 nonzeros
+Model fingerprint: 0xcd7220c8
+Model has 15 quadratic objective terms
+Model has 1 quadratic constraint
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  QMatrix range    [1e+00, 1e+00]
+  Objective range  [0e+00, 0e+00]
+  QObjective range [2e+00, 2e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+  QRHS range       [1e+00, 1e+00]
+Presolve removed 14 rows and 6 columns
+
+Continuous model is non-convex -- solving as a MIP
+
+Presolve removed 14 rows and 6 columns
+Presolve time: 0.00s
+Presolved: 122 rows, 52 columns, 333 nonzeros
+Presolved model has 25 bilinear constraint(s)
+Warning: Model contains variables with very large bounds participating
+         in product terms.
+         Presolve was not able to compute smaller bounds for these variables.
+         Consider bounding these variables or reformulating the model.
+
+Variable types: 52 continuous, 0 integer (0 binary)
+Found heuristic solution: objective 4.7500000
+
+Root relaxation: objective 1.927632e+01, 55 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   19.27632    0   19    4.75000   19.27632   306%     -    0s
+     0     0    6.43421    0   16    4.75000    6.43421  35.5%     -    0s
+     0     0    5.05385    0   13    4.75000    5.05385  6.40%     -    0s
+     0     0    5.04742    0   13    4.75000    5.04742  6.26%     -    0s
+     0     0    5.03963    0   13    4.75000    5.03963  6.10%     -    0s
+     0     0    4.95536    0   16    4.75000    4.95536  4.32%     -    0s
+H    0     0                       4.7500000    4.95536  4.32%     -    0s
+     0     2    4.95536    0   16    4.75000    4.95536  4.32%     -    0s
+*  331   302              25       4.7500001    4.76527  0.32%   0.9    0s
+*  364   302              25       4.7500001    4.76527  0.32%   0.9    0s
+*  494   412              35       4.7500002    4.76527  0.32%   1.1    0s
+H  807   749                       4.7500006    4.76527  0.32%   1.7    0s
+
+Cutting planes:
+  RLT: 17
+
+Explored 5356 nodes (5089 simplex iterations) in 0.45 seconds (0.09 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 5: 4.75 4.75 4.75 ... 4.75
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 4.749999873826e+00, best bound 4.750000644325e+00, gap 0.0000%
+
+Gurobi 11.0.2 (linux64, C++) logging started Thu Jun 13 14:28:41 2024
+
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2526083
+Set parameter LogFile to value "naive.log"
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Warning: model has pending changes.
+Derived model does not contain these changes.
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 20.04.6 LTS")
+
+CPU model: AMD Ryzen 7 5800H with Radeon Graphics, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Optimize a model with 0 rows, 0 columns and 0 nonzeros
+Model fingerprint: 0xf9715da1
+Coefficient statistics:
+  Matrix range     [0e+00, 0e+00]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [0e+00, 0e+00]
+Presolve time: 0.00s
+Presolve: All rows and columns removed
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    0.0000000e+00   0.000000e+00   0.000000e+00      0s
+
+Solved in 0 iterations and 0.00 seconds (0.00 work units)
+Optimal objective  0.000000000e+00
+Gurobi Optimizer version 11.0.2 build v11.0.2rc0 (linux64 - "Ubuntu 20.04.6 LTS")
+
+CPU model: AMD Ryzen 7 5800H with Radeon Graphics, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Academic license 2526083 - for non-commercial use only - registered to se___@gmail.com
+Optimize a model with 43 rows, 31 columns and 114 nonzeros
+Model fingerprint: 0xcd7220c8
+Model has 15 quadratic objective terms
+Model has 1 quadratic constraint
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  QMatrix range    [1e+00, 1e+00]
+  Objective range  [0e+00, 0e+00]
+  QObjective range [2e+00, 2e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+  QRHS range       [1e+00, 1e+00]
+Presolve removed 14 rows and 6 columns
+
+Continuous model is non-convex -- solving as a MIP
+
+Presolve removed 14 rows and 6 columns
+Presolve time: 0.00s
+Presolved: 122 rows, 52 columns, 333 nonzeros
+Presolved model has 25 bilinear constraint(s)
+Warning: Model contains variables with very large bounds participating
+         in product terms.
+         Presolve was not able to compute smaller bounds for these variables.
+         Consider bounding these variables or reformulating the model.
+
+Variable types: 52 continuous, 0 integer (0 binary)
+Found heuristic solution: objective 4.7500000
+
+Root relaxation: objective 1.927632e+01, 55 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   19.27632    0   19    4.75000   19.27632   306%     -    0s
+     0     0    6.43421    0   16    4.75000    6.43421  35.5%     -    0s
+     0     0    5.05385    0   13    4.75000    5.05385  6.40%     -    0s
+     0     0    5.04742    0   13    4.75000    5.04742  6.26%     -    0s
+     0     0    5.03963    0   13    4.75000    5.03963  6.10%     -    0s
+     0     0    4.95536    0   16    4.75000    4.95536  4.32%     -    0s
+H    0     0                       4.7500000    4.95536  4.32%     -    0s
+     0     2    4.95536    0   16    4.75000    4.95536  4.32%     -    0s
+*  331   302              25       4.7500001    4.76527  0.32%   0.9    0s
+*  364   302              25       4.7500001    4.76527  0.32%   0.9    0s
+*  494   412              35       4.7500002    4.76527  0.32%   1.1    0s
+H  807   749                       4.7500006    4.76527  0.32%   1.7    0s
+
+Cutting planes:
+  RLT: 17
+
+Explored 5356 nodes (5089 simplex iterations) in 0.40 seconds (0.09 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 5: 4.75 4.75 4.75 ... 4.75
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 4.749999873826e+00, best bound 4.750000644325e+00, gap 0.0000%
